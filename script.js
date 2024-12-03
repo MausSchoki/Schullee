@@ -1,14 +1,19 @@
-// script.js
-function addMessage() {
-    const messageInput = document.getElementById('messageInput');
-    const messageList = document.getElementById('messageList');
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
 
-    if (messageInput.value.trim() !== "") {
-        const newMessage = document.createElement('li');
-        newMessage.textContent = messageInput.value;
-        messageList.appendChild(newMessage);
-        messageInput.value = "";
-    } else {
-        alert("Bitte geben Sie eine Nachricht ein.");
-    }
-}
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+
+  const response = await fetch('/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password }),
+  });
+
+  const data = await response.json();
+  if (data.success) {
+    window.location.href = data.redirectURL; // Weiterleitung basierend auf Rolle
+  } else {
+    alert('Login fehlgeschlagen: ' + data.message);
+  }
+});
